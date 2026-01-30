@@ -1,9 +1,9 @@
 const { test, expect } = require('@playwright/test');
 
 const testCases = [
-  { input: "mama adha university ekata yanavaa" },
-  { input: "ooyaage nama mokakdha?" },
-  { input: "suba dhavasak" }
+  { input: "Me assignment ekata goda Weelawak yayi wageh" },
+  { input: "suba dawasak veva yaluve" },
+  { input: "oya assignment eka ivara karala dha?" }
 ];
 
 for (const data of testCases) {
