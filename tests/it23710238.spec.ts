@@ -1,13 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-/**
- * Singlish → Sinhala Transliteration Test Suite
- * Student ID : IT23710238
- */
 test.describe('Sinhala Transliteration - Full 35 Case Optimized Suite', () => {
 
     test.beforeEach(async ({ page }) => {
-        await page.goto('https://www.pixelssuite.com/chat-translator');
+        await page.goto('https://www.swifttranslator.com/');
         await page.waitForLoadState('networkidle');
     });
 
@@ -54,36 +50,34 @@ test.describe('Sinhala Transliteration - Full 35 Case Optimized Suite', () => {
         { id: "Pos_UI_0001",  len: "S", input: "mama gedhara yanavaa",                                                                                                                                           expected: "මම ගෙදර යනවා" },
     ];
 
+
     for (const tc of testCases) {
-        test(`${tc.id} [Length: ${tc.len}]`, async ({ page }) => {
+        test(`${tc.id}`, async ({ page }) => {
             const inputArea = page.getByPlaceholder('Input Your Singlish Text Here.');
             const outputBox = page.locator('.card:has-text("Sinhala") .bg-slate-50');
 
-            // 1. Clear and type input
             await inputArea.fill('');
             await inputArea.type(tc.input, { delay: 20 });
-
-            // 2. Wait for conversion to complete
+            
+            // Critical: Wait for conversion to complete
             await page.waitForTimeout(2000);
 
             const rawOutput = await outputBox.textContent() || '';
-
-            // 3. Cleaning logic
-            const cleanActual   = rawOutput.replace(/[\n\r\t]/g, ' ').replace(/\s+/g, ' ').trim();
+            
+            // CLEANING PROCESS:
+            const cleanActual = rawOutput.replace(/[\n\r\t]/g, ' ').replace(/\s+/g, ' ').trim();
             const cleanExpected = tc.expected.replace(/[\n\r\t]/g, ' ').replace(/\s+/g, ' ').trim();
 
-            // 4. Word-by-word matching (Sinhala Unicode + ASCII tokens)
+            // WORD MATCH LOGIC:
             const expectedWords = cleanExpected.match(/[\u0D80-\u0DFF]+|[A-Za-z0-9]+/g) || [];
-            const matchedWords  = expectedWords.filter(word => cleanActual.includes(word));
-
-            const successRate = expectedWords.length > 0
-                ? (matchedWords.length / expectedWords.length) * 100
-                : 0;
-
+            const matchedWords = expectedWords.filter(word => cleanActual.includes(word));
+            
+            const successRate = (matchedWords.length / expectedWords.length) * 100;
+            
             console.log(`[${tc.id}] Input: "${tc.input}" | Match: ${successRate.toFixed(1)}%`);
 
-            // 5. Pass threshold: 60%
-            expect(successRate, `Failed ${tc.id}. Expected: "${cleanExpected}" | Got: "${cleanActual}"`).toBeGreaterThanOrEqual(60);
+            // Threshold: Set to 60 to allow minor engine variations
+            expect(successRate, `Failed ${tc.id}. Found: ${cleanActual}`).toBeGreaterThanOrEqual(60);
         });
     }
 });
