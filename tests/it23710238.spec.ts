@@ -3,7 +3,6 @@ import { test, expect } from '@playwright/test';
 /**
  * Singlish → Sinhala Transliteration Test Suite
  * Student ID : IT23710238
- * Target URL : https://www.pixelssuite.com/chat-translator
  */
 test.describe('Sinhala Transliteration - Full 35 Case Optimized Suite', () => {
 
